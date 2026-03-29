@@ -35,11 +35,20 @@ garph.add_node('intent', intent)
 garph.set_entry_point("input")
 
 garph.add_edge("input",   "intent")
-
-garph.add_edge("retrieval",        "lie_detection")
-garph.add_edge('lie_detection', "sus")
+graph.add_conditional_edges(
+        "intent",
+        route_intent,
+        {
+            "evidence_search": "evidence_search_node",
+            "retrieval":       "retrieval",
+            "accusation":      "accusation_node",
+            "officer":         "officer_node",
+        },
+    )
+garph.add_edge("retrieval",        "detect_lie")
+garph.add_edge('detect_lie', "sus")
 garph.add_edge("sus",    "prompt_response")
-garph.add_edge("prompt_response", "summarize")
-garph.add_edge("summarize",        "input")
+garph.add_edge("prompt_response", "summarization_node")
+garph.add_edge("summarization_node",        "input")
 
 
